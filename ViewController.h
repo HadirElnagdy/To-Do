@@ -6,8 +6,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Editable.h"
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, Editable>
 
 
 @end
