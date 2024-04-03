@@ -13,6 +13,7 @@
 @interface ViewController ()
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *prioritySegmentedControl;
+@property (strong, nonatomic) IBOutlet UIView *placeholderView;
 @property (strong, nonatomic) IBOutlet UISearchBar *searchBar;
 @property NSMutableArray<Task *> *highPriority;
 @property NSMutableArray<Task *> *lowPriority;
@@ -104,6 +105,7 @@
             _filteredTasks = _allTasks;
             break;
     }
+    self.placeholderView.hidden = (_filteredTasks.count > 0);
     [_tableView reloadData];
 }
 

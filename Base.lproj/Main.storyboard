@@ -53,6 +53,20 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="Kyr-Xj-IrI"/>
                                 </connections>
                             </searchBar>
+                            <view contentMode="scaleToFill" id="n88-nd-AZG">
+                                <rect key="frame" x="39" y="356" width="314" height="140"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="There's no tasks!!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s4c-Sq-vI0">
+                                        <rect key="frame" x="70" y="60" width="190" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="0Iz-Ic-Oso"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -66,6 +80,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="placeholderView" destination="n88-nd-AZG" id="ZW3-7z-bFm"/>
                         <outlet property="prioritySegmentedControl" destination="K6w-yn-5d8" id="AZR-sn-fVc"/>
                         <outlet property="searchBar" destination="bqY-9g-vrD" id="2a9-ve-OTj"/>
                         <outlet property="tableView" destination="A8J-bJ-8CJ" id="IdK-ej-mv0"/>
@@ -180,7 +195,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DHv-Dr-a02" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="739.69465648854964" y="786.61971830985919"/>
+            <point key="canvasLocation" x="2030" y="744"/>
         </scene>
         <!--Done View Controller-->
         <scene sceneID="nmd-e1-W4f">
@@ -205,18 +220,33 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <view contentMode="scaleToFill" id="6Gx-21-RGd">
+                                <rect key="frame" x="40" y="350" width="314" height="140"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="There's no tasks!!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l0D-ZF-dRv">
+                                        <rect key="frame" x="70" y="60" width="190" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="bGK-Px-VlR"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="Jpw-5f-IIc"/>
                     <connections>
+                        <outlet property="placeholderView" destination="6Gx-21-RGd" id="o0v-pd-62e"/>
                         <outlet property="tableView" destination="aAJ-ty-Tqj" id="EBi-Wd-i6E"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0Pr-hB-FME" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-389" y="4"/>
+            <point key="canvasLocation" x="-390.07633587786256" y="3.5211267605633805"/>
         </scene>
         <!--New Task View Controller-->
         <scene sceneID="ski-X7-h1l">
@@ -340,12 +370,27 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <view contentMode="scaleToFill" id="juj-gT-q6F">
+                                <rect key="frame" x="39" y="356" width="314" height="140"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="There's no tasks!!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DvV-fe-weU">
+                                        <rect key="frame" x="70" y="60" width="190" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="1Yq-tw-4UA"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="6Zs-5w-gBV"/>
                     <connections>
+                        <outlet property="placeholderView" destination="juj-gT-q6F" id="AM9-Fe-uHZ"/>
                         <outlet property="tableView" destination="iaA-8v-2oU" id="gqN-M3-elf"/>
                     </connections>
                 </viewController>
