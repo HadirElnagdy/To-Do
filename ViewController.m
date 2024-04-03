@@ -18,6 +18,7 @@
 @property NSMutableArray<Task *> *lowPriority;
 @property NSMutableArray<Task *> *midPriority;
 @property NSMutableArray<Task *> *filteredTasks;
+@property NSMutableArray<Task *> *allTasks;
 @property NewTaskViewController *addingTaskVC;
 
 @end
@@ -30,6 +31,7 @@
     _tableView.delegate = self;
     _tableView.dataSource = self;
     _filteredTasks = [NSMutableArray new];
+    _allTasks = [NSMutableArray new];
     _lowPriority = [NSMutableArray new];
     _midPriority = [NSMutableArray new];
     _highPriority = [NSMutableArray new];
@@ -52,7 +54,7 @@
 }
 
 
-- (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section { 
+- (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return _filteredTasks.count;
 }
 
@@ -60,6 +62,15 @@
     DetailsViewController *detailsVC = [self.storyboard instantiateViewControllerWithIdentifier:@"DetailsViewController"];
     detailsVC.task = _filteredTasks[indexPath.row];
     [self.navigationController pushViewController:detailsVC animated:YES];
+}
+
+
+- (IBAction)searchTextChanged:(UITextField *)sender {
+    if (sender.text.length > 0) {
+        [self doSearch:sender.text];
+    } else {
+        [self filterTasks];
+    }
 }
 
 
@@ -78,10 +89,6 @@
 }
 
 
-
-
-
-
 - (IBAction)priorityFilterChanged:(UISegmentedControl *)sender {
     [self filterTasks];
 }
@@ -94,8 +101,11 @@
         case 1:
             _filteredTasks = _midPriority;
             break;
-        default:
+        case 2:
             _filteredTasks = _lowPriority;
+            break;
+        default:
+            _filteredTasks = _allTasks;
             break;
     }
     [_tableView reloadData];
@@ -115,6 +125,7 @@
         [_highPriority removeAllObjects];
         [_midPriority removeAllObjects];
         [_lowPriority removeAllObjects];
+        [_allTasks removeAllObjects];
         
         NSPredicate *highPriorityPredicate = [NSPredicate predicateWithFormat:@"priority == 0"];
         NSPredicate *midPriorityPredicate = [NSPredicate predicateWithFormat:@"priority == 1"];
@@ -123,6 +134,8 @@
         _highPriority = [[existingTasks filteredArrayUsingPredicate:highPriorityPredicate] mutableCopy];
         _midPriority = [[existingTasks filteredArrayUsingPredicate:midPriorityPredicate] mutableCopy];
         _lowPriority = [[existingTasks filteredArrayUsingPredicate:lowPriorityPredicate] mutableCopy];
+        _allTasks = [existingTasks mutableCopy];
+        
         [self filterTasks];
     }
 }
@@ -133,6 +146,11 @@
     
     NSData *encodedTasks = [userDefaults objectForKey:@"toDoTasks"];
     NSMutableArray<Task *> *existingTasks = [NSMutableArray array];
+    
+    if (encodedTasks != nil) {
+        NSError *error = nil;
+        existingTasks = [NSKeyedUnarchiver unarchiveObjectWithData: encodedTasks];
+    }
     
     BOOL found = NO;
     for (int i = 0; i < existingTasks.count; i++) {
@@ -148,14 +166,20 @@
         return;
     }
     
-  
+    
     NSData *updatedEncodedTasks = [NSKeyedArchiver archivedDataWithRootObject:existingTasks];
-  
+    
     [userDefaults setObject:updatedEncodedTasks forKey:@"toDoTasks"];
-  
+    
     [self syncData];
 }
 
+-(void) doSearch: (NSString *)searchText{
+    NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"name contains[c] %@", searchText];
+    
+    [_filteredTasks filterUsingPredicate: searchPredicate];
+    [_tableView reloadData];
+}
 
 
 @end

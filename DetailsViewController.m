@@ -40,8 +40,12 @@
             key = @"doneTasks";
             break;
     }
-    [self updateTask:_task inArrayInUserDefaultsForKey:key];
-    [self.navigationController popViewControllerAnimated: YES];
+    _task.name = _nameTextField.text;
+    _task.desc = _descTextView.text;
+    _task.priority = _prioritySegmentControl.selectedSegmentIndex;
+    _task.state = _stateSegmentControl.selectedSegmentIndex;
+    [self makeAlert: key];
+    
 }
 
 - (void)updateTask:(Task *)updatedTask inArrayInUserDefaultsForKey:(NSString *)key {
@@ -78,6 +82,18 @@
     [userDefaults synchronize];
 }
 
+-(void) makeAlert: (NSString *)key{
+    UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Confirmation" message:@"Are You Sure you want to edit!" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* yesButton = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self updateTask:self->_task inArrayInUserDefaultsForKey:key];
+        [self.navigationController popViewControllerAnimated: YES];
+    }];
+    UIAlertAction* cancelButton = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler: nil];
+    [alert addAction:yesButton];
+    [alert addAction: cancelButton];
+    [self presentViewController: alert animated:YES completion:nil];
+    
+}
 
 
 @end

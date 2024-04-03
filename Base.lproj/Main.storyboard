@@ -37,14 +37,18 @@
                                 <color key="backgroundColor" red="0.92035045106001578" green="0.92035045106001578" blue="0.92035045106001578" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="searchTextChanged:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="dzy-Lj-gLJ"/>
+                                </connections>
                             </textField>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="K6w-yn-5d8">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="3" translatesAutoresizingMaskIntoConstraints="NO" id="K6w-yn-5d8">
                                 <rect key="frame" x="88" y="163" width="217" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <segments>
                                     <segment title="High"/>
                                     <segment title="Mid"/>
                                     <segment title="Low"/>
+                                    <segment title="All"/>
                                 </segments>
                                 <connections>
                                     <action selector="priorityFilterChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="bDM-QF-1lV"/>
