@@ -10,6 +10,7 @@
 
 @interface DoneViewController ()
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
+@property (strong, nonatomic) IBOutlet UIView *placeholderView;
 @property NSMutableArray<Task *> *allTasks;
 
 //DoneCell
@@ -71,6 +72,7 @@
         NSError *error = nil;
         existingTasks = [NSKeyedUnarchiver unarchiveObjectWithData: encodedTasks];
         _allTasks = existingTasks;
+        self.placeholderView.hidden = (_allTasks.count > 0);
         [self.tableView reloadData];
     }
 }
