@@ -28,6 +28,7 @@
     switch (_stateSegmentControl.selectedSegmentIndex) {
         case 1:
             [_stateSegmentControl setEnabled: NO forSegmentAtIndex:0];
+            //flag
             break;
         case 2:
             [_stateSegmentControl setEnabled: NO forSegmentAtIndex:0];

@@ -28,6 +28,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     _addingTaskVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewTaskViewController"];
+    _searchBar.delegate = self;
     _tableView.delegate = self;
     _tableView.dataSource = self;
     _filteredTasks = [NSMutableArray new];
@@ -105,6 +106,8 @@
     [_tableView reloadData];
 }
 
+
+
 -(void) syncData{
     
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
@@ -168,12 +171,20 @@
     [self syncData];
 }
 
--(void) doSearch: (NSString *)searchText{
-    NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"name contains[c] %@", searchText];
-    
-    [_filteredTasks filterUsingPredicate: searchPredicate];
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
+    if (searchText.length > 0) {
+           [self doSearch:searchText];
+       } else {
+           [self filterTasks];
+       }
+}
+
+- (void)doSearch:(NSString *)searchText {
+    NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"name CONTAINS[c] %@", searchText];
+    _filteredTasks = [[_allTasks filteredArrayUsingPredicate:searchPredicate] mutableCopy];
     [_tableView reloadData];
 }
+
 
 
 @end
