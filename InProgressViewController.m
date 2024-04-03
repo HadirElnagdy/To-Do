@@ -11,7 +11,6 @@
 
 @interface InProgressViewController ()
 
-@property NewTaskViewController *addingTaskVC;
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property NSMutableArray<Task *> *allTasks;
 
@@ -22,12 +21,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _addingTaskVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewTaskViewController"];
     _allTasks = [NSMutableArray new];
     _tableView.delegate = self;
     _tableView.dataSource = self;
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [self syncData];
+}
 
 
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
@@ -54,16 +55,55 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     
     if (editingStyle == UITableViewCellEditingStyleDelete){
-        [_allTasks removeObjectAtIndex:indexPath.row];
+        [self deleteTaskAtIndex:(int)indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }
     
 }
 
 
-- (void)addTask:(Task *)task {
-    [_allTasks addObject: task];
-    [_tableView reloadData];
+-(void) syncData{
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    
+    NSData *encodedTasks = [userDefaults objectForKey:@"doingTasks"];
+    NSMutableArray<Task *> *existingTasks = [NSMutableArray new];
+    
+    if (encodedTasks != nil) {
+        NSError *error = nil;
+        existingTasks = [NSKeyedUnarchiver unarchiveObjectWithData: encodedTasks];
+        _allTasks = existingTasks;
+        [self.tableView reloadData];
+    }
+}
+
+- (void)deleteTaskAtIndex:(int)index {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    
+    NSData *encodedTasks = [userDefaults objectForKey:@"doingTasks"];
+    NSMutableArray<Task *> *existingTasks = [NSMutableArray array];
+    
+    if (encodedTasks != nil) {
+        NSError *error = nil;
+        existingTasks = [NSKeyedUnarchiver unarchiveObjectWithData: encodedTasks];
+    }
+    
+    if (index < existingTasks.count) {
+        
+        [existingTasks removeObjectAtIndex:index];
+        
+        NSError *error = nil;
+        NSData *updatedEncodedTasks = [NSKeyedArchiver archivedDataWithRootObject:existingTasks];
+        if (error != nil) {
+            NSLog(@"Error archiving updated tasks: %@", error.localizedDescription);
+            return;
+        }
+        [userDefaults setObject:updatedEncodedTasks forKey:@"doingTasks"];
+        [userDefaults synchronize];
+    } else {
+        NSLog(@"Index is out of bounds.");
+    }
+    _allTasks = existingTasks;
 }
 
 

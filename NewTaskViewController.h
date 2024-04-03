@@ -6,13 +6,10 @@
 //
 
 #import "ViewController.h"
-#import "Editable.h"
 
 @interface NewTaskViewController : ViewController
 
-@property id<Editable> toDoDelegate;
-@property id<Editable> doingDelegate;
-@property id<Editable> doneDelegate;
+
 
 @end
 

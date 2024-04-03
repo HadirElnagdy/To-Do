@@ -33,7 +33,12 @@
     _lowPriority = [NSMutableArray new];
     _midPriority = [NSMutableArray new];
     _highPriority = [NSMutableArray new];
-    [self filterTasks];
+    
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [self syncData];
+    
 }
 
 
@@ -59,44 +64,22 @@
 
 
 - (IBAction)addTaskPressed:(UIBarButtonItem *)sender {
-    [self presentViewController: _addingTaskVC animated: YES completion: ^(void){
-        self->_addingTaskVC.toDoDelegate = self;
-    }];
+    [self.navigationController pushViewController:_addingTaskVC animated:YES];
     
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     
     if (editingStyle == UITableViewCellEditingStyleDelete){
-        [self deleteFromList: (int)indexPath.row];
+        [self deleteTask: _filteredTasks[indexPath.row]];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }
     
 }
 
 
-- (void)addTask:(Task *)task { 
-    switch (task.priority) {
-        case 0:
-            [_highPriority addObject: task];
-            _filteredTasks = _highPriority;
-            break;
-        case 1:
-            [_midPriority addObject: task];
-            _filteredTasks = _midPriority;
-            break;
-        default:
-            [_lowPriority addObject: task];
-            _filteredTasks = _lowPriority;
-            break;
-    }
-    [self filterTasks];
-    [_tableView reloadData];
-}
 
-- (void)editTask:(Task *)task { 
-    //
-}
+
 
 
 - (IBAction)priorityFilterChanged:(UISegmentedControl *)sender {
@@ -118,21 +101,59 @@
     [_tableView reloadData];
 }
 
--(void) deleteFromList: (int) index{
-    switch (_prioritySegmentedControl.selectedSegmentIndex) {
-        case 0:
-            [_highPriority removeObjectAtIndex: index];
-            _filteredTasks = _highPriority;
-            break;
-        case 1:
-            [_midPriority  removeObjectAtIndex: index];
-            _filteredTasks = _midPriority;
-            break;
-        default:
-            [_lowPriority  removeObjectAtIndex: index];
-            _filteredTasks = _lowPriority;
-            break;
+-(void) syncData{
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    
+    NSData *encodedTasks = [userDefaults objectForKey:@"toDoTasks"];
+    NSMutableArray<Task *> *existingTasks = [NSMutableArray new];
+    
+    if (encodedTasks != nil) {
+        existingTasks = [NSKeyedUnarchiver unarchiveObjectWithData:encodedTasks];
+        
+        
+        [_highPriority removeAllObjects];
+        [_midPriority removeAllObjects];
+        [_lowPriority removeAllObjects];
+        
+        NSPredicate *highPriorityPredicate = [NSPredicate predicateWithFormat:@"priority == 0"];
+        NSPredicate *midPriorityPredicate = [NSPredicate predicateWithFormat:@"priority == 1"];
+        NSPredicate *lowPriorityPredicate = [NSPredicate predicateWithFormat:@"priority == 2"];
+        
+        _highPriority = [[existingTasks filteredArrayUsingPredicate:highPriorityPredicate] mutableCopy];
+        _midPriority = [[existingTasks filteredArrayUsingPredicate:midPriorityPredicate] mutableCopy];
+        _lowPriority = [[existingTasks filteredArrayUsingPredicate:lowPriorityPredicate] mutableCopy];
+        [self filterTasks];
     }
+}
+
+- (void)deleteTask:(Task *)task {
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    
+    NSData *encodedTasks = [userDefaults objectForKey:@"toDoTasks"];
+    NSMutableArray<Task *> *existingTasks = [NSMutableArray array];
+    
+    BOOL found = NO;
+    for (int i = 0; i < existingTasks.count; i++) {
+        if ([existingTasks[i].uId isEqualToString:task.uId]) {
+            [existingTasks removeObjectAtIndex:i];
+            found = YES;
+            break;
+        }
+    }
+    
+    if (!found) {
+        NSLog(@"Task with ID %@ not found in array.", task.uId);
+        return;
+    }
+    
+  
+    NSData *updatedEncodedTasks = [NSKeyedArchiver archivedDataWithRootObject:existingTasks];
+  
+    [userDefaults setObject:updatedEncodedTasks forKey:@"toDoTasks"];
+  
+    [self syncData];
 }
 
 

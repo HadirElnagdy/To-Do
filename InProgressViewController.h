@@ -7,7 +7,7 @@
 
 #import "ViewController.h"
 
-@interface InProgressViewController : ViewController <UITableViewDelegate, UITableViewDataSource, Editable>
+@interface InProgressViewController : ViewController <UITableViewDelegate, UITableViewDataSource>
 
 @end
 

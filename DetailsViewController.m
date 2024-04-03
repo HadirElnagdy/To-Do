@@ -28,9 +28,56 @@
 }
 
 - (IBAction)savePressed:(UIButton *)sender {
-    //delegate editTask(it will edit the task in the array and userdefaults
+    NSString *key = [[NSString alloc] init];
+    switch (_task.state) {
+        case 0:
+            key = @"toDoTasks";
+            break;
+        case 1:
+            key = @"doingTasks";
+            break;
+        default:
+            key = @"doneTasks";
+            break;
+    }
+    [self updateTask:_task inArrayInUserDefaultsForKey:key];
     [self.navigationController popViewControllerAnimated: YES];
 }
+
+- (void)updateTask:(Task *)updatedTask inArrayInUserDefaultsForKey:(NSString *)key {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    
+    NSData *encodedTasks = [userDefaults objectForKey:key];
+    NSMutableArray<Task *> *existingTasks = [NSMutableArray array];
+    
+    if (encodedTasks != nil) {
+        NSError *error = nil;
+        existingTasks = [NSKeyedUnarchiver unarchiveObjectWithData: encodedTasks];
+    }
+    
+    
+    BOOL found = NO;
+    for (NSInteger i = 0; i < existingTasks.count; i++) {
+        Task *task = existingTasks[i];
+        if ([task.uId isEqualToString:updatedTask.uId]) {
+            existingTasks[i] = updatedTask;
+            found = YES;
+            break;
+        }
+    }
+    
+    if (!found) {
+        NSLog(@"Task with ID %@ not found in array.", updatedTask.uId);
+        return;
+    }
+    
+  
+    NSData *updatedEncodedTasks = [NSKeyedArchiver archivedDataWithRootObject:existingTasks];
+  
+    [userDefaults setObject:updatedEncodedTasks forKey:key];
+    [userDefaults synchronize];
+}
+
 
 
 @end
