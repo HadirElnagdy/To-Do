@@ -78,6 +78,7 @@
     
     if (editingStyle == UITableViewCellEditingStyleDelete){
         [self deleteTask: _filteredTasks[indexPath.row]];
+        [_filteredTasks removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }
     
@@ -168,7 +169,7 @@
     
     [userDefaults setObject:updatedEncodedTasks forKey:@"toDoTasks"];
     
-    [self syncData];
+//    [self syncData];
 }
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
