@@ -25,6 +25,17 @@
     _prioritySegmentControl.selectedSegmentIndex = _task.priority;
     _stateSegmentControl.selectedSegmentIndex = _task.state;
     _dateLabel.text = _task.date;
+    switch (_stateSegmentControl.selectedSegmentIndex) {
+        case 1:
+            [_stateSegmentControl setEnabled: NO forSegmentAtIndex:0];
+            break;
+        case 2:
+            [_stateSegmentControl setEnabled: NO forSegmentAtIndex:0];
+            [_stateSegmentControl setEnabled: NO forSegmentAtIndex:1];
+            break;
+        default:
+            break;
+    }
 }
 
 - (IBAction)savePressed:(UIButton *)sender {
@@ -64,7 +75,11 @@
     for (NSInteger i = 0; i < existingTasks.count; i++) {
         Task *task = existingTasks[i];
         if ([task.uId isEqualToString:updatedTask.uId]) {
-            existingTasks[i] = updatedTask;
+            if(updatedTask.state != existingTasks[i].state){
+                [existingTasks removeObjectAtIndex: i];
+                [self updateTaskState: updatedTask];
+            }
+            else existingTasks[i] = updatedTask;
             found = YES;
             break;
         }
@@ -75,9 +90,9 @@
         return;
     }
     
-  
+    
     NSData *updatedEncodedTasks = [NSKeyedArchiver archivedDataWithRootObject:existingTasks];
-  
+    
     [userDefaults setObject:updatedEncodedTasks forKey:key];
     [userDefaults synchronize];
 }
@@ -93,6 +108,51 @@
     [alert addAction: cancelButton];
     [self presentViewController: alert animated:YES completion:nil];
     
+}
+
+-(void) updateTaskState:(Task *) task{
+    switch (task.state) {
+        case 1:
+            [self addTask:task toArrayInUserDefaultsForKey:@"doingTasks"];
+            break;
+        case 2:
+            [self addTask:task toArrayInUserDefaultsForKey:@"doneTasks"];
+            break;
+        default:
+            break;
+    }
+
+}
+
+- (void)addTask:(Task *)newTask toArrayInUserDefaultsForKey:(NSString *)key {
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    
+    NSData *encodedTasks = [userDefaults objectForKey:key];
+    NSMutableArray<Task *> *existingTasks = [NSMutableArray new];
+    
+    if (encodedTasks != nil) {
+        existingTasks = [NSKeyedUnarchiver unarchiveObjectWithData: encodedTasks];
+        
+    }
+    if (existingTasks == (NSMutableArray *) nil) {
+        existingTasks = [NSMutableArray new];
+    }
+    [existingTasks addObject: newTask];
+    
+    
+    NSError *error = nil;
+    
+    NSData *updatedEncodedTasks = [NSKeyedArchiver archivedDataWithRootObject:existingTasks] ;
+    
+    if (error != nil) {
+        NSLog(@"Error archiving updated tasks: %@", error.localizedDescription);
+        return;
+    }
+    
+    
+    [userDefaults setObject:updatedEncodedTasks forKey:key];
+    [userDefaults synchronize];
 }
 
 

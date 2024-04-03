@@ -12,8 +12,8 @@
 
 @interface ViewController ()
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
-@property (strong, nonatomic) IBOutlet UITextField *searchTextField;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *prioritySegmentedControl;
+@property (strong, nonatomic) IBOutlet UISearchBar *searchBar;
 @property NSMutableArray<Task *> *highPriority;
 @property NSMutableArray<Task *> *lowPriority;
 @property NSMutableArray<Task *> *midPriority;
@@ -65,13 +65,7 @@
 }
 
 
-- (IBAction)searchTextChanged:(UITextField *)sender {
-    if (sender.text.length > 0) {
-        [self doSearch:sender.text];
-    } else {
-        [self filterTasks];
-    }
-}
+
 
 
 - (IBAction)addTaskPressed:(UIBarButtonItem *)sender {
